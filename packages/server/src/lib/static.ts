@@ -131,7 +131,7 @@ export async function initializeZones(): Promise<void> {
 		}
 	}
 
-	if (availableZones.size === 0) {
+	if (availableZones.isEmpty()) {
 		log.info('no static zones available — frontend assets will not be served');
 	} else {
 		log.info(
@@ -161,7 +161,7 @@ export async function initializeZones(): Promise<void> {
  * @returns A static file `Response`, or `null` to pass through.
  */
 export async function serveStaticFile(request: Request): Promise<Response | null> {
-	if (availableZones.size === 0) return null;
+	if (availableZones.isEmpty()) return null;
 
 	const { pathname } = new URL(request.url);
 

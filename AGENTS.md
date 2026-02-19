@@ -132,7 +132,7 @@ docs ─────────────────────────
 - `@rainestack/tools/try-catch` — `tryCatch()` error-handling primitive
 - `@rainestack/tools/temporal` — Prisma ↔ Temporal conversion utilities (`toInstant`, `toDate`, `toISO`, `toISOOrNull`)
 - `@rainestack/tools/temporal-polyfill` — Side-effect import that installs the Temporal API globally
-- `@rainestack/tools/prototypes` — Side-effect import that adds `Array.prototype.isEmpty()` and `Array.prototype.flush()`
+- `@rainestack/tools/prototypes` — Side-effect import that extends Array, Set, Map, Number, String, and Object prototypes with convenience methods
 
 **Key files:**
 | File                    | Description                                                    |
@@ -140,7 +140,7 @@ docs ─────────────────────────
 | `src/try-catch.ts`      | `tryCatch()` — wraps sync functions, Promises, and AsyncIterables into `{ data, error }` discriminated unions |
 | `src/temporal.ts`       | `toInstant()`, `toDate()`, `toISO()`, `toISOOrNull()` for Prisma Date ↔ Temporal.Instant conversion |
 | `src/temporal-polyfill.ts` | Re-exports `temporal-polyfill/global` to install the Temporal API on `globalThis` |
-| `src/prototypes.ts`     | Extends `Array.prototype` with `isEmpty()` and `flush()` |
+| `src/prototypes.ts`     | Extends `Array.prototype` with `isEmpty()` and `flush()`, extends `Set.prototype` and `Map.prototype` with `isEmpty()`, adds `exists` getter to Number, String, and Object prototypes |
 
 ---
 
@@ -558,6 +558,8 @@ Follows the exact same structure and initialisation pattern as `@rainestack/web`
    ```
 
 2. **Available prototype extensions:**
+
+   **Array extensions (methods):**
    - `Array.prototype.isEmpty()` — returns `true` when the array has no elements
    - `Array.prototype.flush()` — removes all elements in place by setting `length` to 0
 
@@ -567,6 +569,49 @@ Follows the exact same structure and initialisation pattern as `@rainestack/web`
    items.flush();   // items is now []
    items.isEmpty(); // true
    ```
+
+   **Collection extensions (methods):**
+   - `Set.prototype.isEmpty()` — returns `true` when the set has no elements
+   - `Map.prototype.isEmpty()` — returns `true` when the map has no entries
+
+   ```ts
+   const set = new Set();
+   set.isEmpty(); // true
+   set.add(1);
+   set.isEmpty(); // false
+   
+   const map = new Map();
+   map.isEmpty(); // true
+   map.set('key', 'value');
+   map.isEmpty(); // false
+   ```
+
+   **Primitive type extensions (getters):**
+   - `Number.prototype.exists` — returns `true` when the value is not `NaN`
+   - `String.prototype.exists` — returns `true` when the string is not empty
+   - `Object.prototype.exists` — returns `true` when the object has own properties
+
+   ```ts
+   const num = NaN;
+   num.exists; // false
+   
+   const str = '';
+   str.exists; // false
+   
+   const obj = {};
+   obj.exists; // false
+   
+   const validNum = 42;
+   validNum.exists; // true
+   
+   const text = 'hello';
+   text.exists; // true
+   
+   const record = { a: 1 };
+   record.exists; // true
+   ```
+
+3. **All extensions are fully typed** in the global TypeScript namespace, so they work with IntelliSense and type checking.
 
 ---
 
@@ -764,6 +809,16 @@ import type { PrismaClient } from '@database/generated/prisma/client';
 | `bun run db:deploy` | Run Prisma migrations + apply triggers (production)|
 | `bun run clean`     | Remove all `node_modules` directories             |
 
+**⚠️ CRITICAL: Always run these commands before committing:**
+
+```bash
+bun run typecheck  # Must pass with no errors
+bun run lint       # Must pass with no errors
+bun run build      # Must complete successfully
+```
+
+These checks are **mandatory** for all code changes. Do not skip them.
+
 **Database scripts (from `packages/database/`):**
 
 | Command                  | Description                          |
@@ -861,3 +916,4 @@ In development, `vite.config.ts` proxies `/api` requests to `http://localhost:30
 9. ✅ **Biome** — always follow the project's formatting and linting rules
 10. ✅ **Env vars** — always access through the validated `env` object, never `process.env` directly
 11. ✅ **Ephemeral tables** — never add NOTIFY or audit triggers to ephemeral tables; add new ephemeral models to the purge function in `triggers.sql` instead
+12. ✅ **ALWAYS TEST** — run `bun run typecheck`, `bun run lint`, and `bun run build` before considering any work complete

@@ -13,10 +13,10 @@ import '@rainestack/tools/prototypes';
 import '@rainestack/tools/temporal-polyfill';
 import '@docs/styles/global.css';
 
+import { App } from '@docs/app';
 import { QueryProvider } from '@rainestack/api/query-provider';
 import { Toaster } from '@rainestack/ui/components/ui/sonner';
 import { ThemeProvider } from '@rainestack/ui/providers/theme';
-import { App } from '@docs/app';
 import { StrictMode } from 'react';
 import { createRoot } from 'react-dom/client';
 

@@ -18,6 +18,7 @@
  * @module listener
  */
 
+import '@rainestack/tools/prototypes';
 import { tryCatch } from '@rainestack/tools/try-catch';
 import pg from 'pg';
 
@@ -380,7 +381,7 @@ export class DatabaseListener {
 
 		return () => {
 			set.delete(handler);
-			if (set.size === 0) {
+			if (set.isEmpty()) {
 				this.changeHandlers.delete(key);
 			}
 		};
