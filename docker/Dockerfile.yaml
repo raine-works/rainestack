@@ -6,7 +6,7 @@
 # purge job can be registered inside the database.
 #
 # Build context: docker/
-# Used by:       docker/dev.yaml
+# Used by:       docker/docker-compose.dev.yaml
 # ---------------------------------------------------------------------------
 
 FROM postgres:18.1

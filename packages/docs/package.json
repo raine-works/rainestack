@@ -3,9 +3,8 @@
 	"private": true,
 	"type": "module",
 	"scripts": {
-		"dev": "bun run sync-docs && vite --port $TURBO_MFE_PORT",
-		"build": "bun run sync-docs && vite build",
-		"sync-docs": "mkdir -p public && cp -r ../../docs/*.md public/",
+		"dev": "vite --port $TURBO_MFE_PORT",
+		"build": "vite build",
 		"typecheck": "tsc --noEmit",
 		"lint": "biome check ./src",
 		"preview": "vite preview"
@@ -19,12 +18,13 @@
 		"react": "catalog:",
 		"react-dom": "catalog:",
 		"react-router": "catalog:",
+		"fumadocs-core": "catalog:",
+		"fumadocs-ui": "catalog:",
+		"fumadocs-mdx": "catalog:",
+		"shiki": "catalog:",
 		"react-markdown": "catalog:",
 		"remark-gfm": "catalog:",
-		"rehype-raw": "catalog:",
-		"rehype-sanitize": "catalog:",
-		"rehype-slug": "catalog:",
-		"rehype-autolink-headings": "catalog:"
+		"rehype-raw": "catalog:"
 	},
 	"devDependencies": {
 		"@rainestack/tsconfig": "workspace:*",

@@ -77,7 +77,7 @@ mystack/
 ├── .bun-version                 # Pinned Bun version
 ├── docker/
 │   ├── Dockerfile.dev           # Custom postgres image with pg_cron built from source
-│   └── dev.yaml                 # Docker Compose for local PostgreSQL
+│   └── docker-compose.dev.yaml  # Docker Compose for local PostgreSQL
 └── packages/
     ├── tools/                   # Shared utilities (tryCatch, Temporal, prototypes)
     ├── database/                # Prisma schema, client, actor transactions, listener
@@ -868,9 +868,9 @@ The standard `postgres:18.1` image does **not** ship the `pg_cron` extension. Th
 | File                  | Purpose                                                        |
 | --------------------- | -------------------------------------------------------------- |
 | `docker/Dockerfile.dev` | Extends `postgres:18.1`, installs build tools, clones and compiles pg_cron from GitHub, then removes build dependencies to keep the image lean |
-| `docker/dev.yaml`     | Compose service that builds from `Dockerfile.dev`, configures PostgreSQL, and mounts a persistent volume |
+| `docker/docker-compose.dev.yaml`     | Compose service that builds from `Dockerfile.dev`, configures PostgreSQL, and mounts a persistent volume |
 
-**Configuration (`docker/dev.yaml`):**
+**Configuration (`docker/docker-compose.dev.yaml`):**
 - Image: built from `docker/Dockerfile.dev` (base `postgres:18.1` + pg_cron)
 - User: `dev_user`
 - Password: `dev_password`
@@ -883,7 +883,7 @@ The standard `postgres:18.1` image does **not** ship the `pg_cron` extension. Th
 
 > **Troubleshooting:** If the database container fails to start after switching images or changing the Dockerfile, the existing volume may contain a stale data directory. Destroy the volume and recreate:
 > ```sh
-> docker compose -f ./docker/dev.yaml down -v
+> docker compose -f ./docker/docker-compose.dev.yaml down -v
 > bun run db:start
 > ```
 

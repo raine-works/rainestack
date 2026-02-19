@@ -1,44 +1,116 @@
 /**
  * Root application component for the docs micro-frontend.
  *
- * Owns the top-level routing for the `/docs` zone. This app is served
- * independently via the Turborepo microfrontends proxy and handles
- * all routes under the `/docs` prefix.
+ * Simple docs app ready for customization.
  *
  * @module app
  */
 
-import { DocsLayout } from '@docs/components/docs-layout';
-import { DocPage } from '@docs/routes/doc-page';
-import { Home } from '@docs/routes/home';
-import { BrowserRouter, Link, Route, Routes } from 'react-router';
+import { MDXPage } from '@docs/components/mdx-page';
+import type { ReactElement } from 'react';
+import { BrowserRouter, Route, Routes } from 'react-router';
 
-export function App() {
+function Home(): ReactElement {
+	return (
+		<div className="min-h-screen bg-background">
+			<div className="container max-w-4xl py-16 px-6">
+				<div className="space-y-8">
+					<div className="space-y-4">
+						<h1 className="text-4xl font-bold tracking-tight">RaineStack Documentation</h1>
+						<p className="text-xl text-muted-foreground">
+							A modern full-stack TypeScript starter built with Bun, Turborepo, Prisma, and React.
+						</p>
+					</div>
+
+					<div className="flex gap-3">
+						<a
+							href="/docs/getting-started"
+							className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
+						>
+							Get Started
+						</a>
+						<a
+							href="/"
+							className="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+						>
+							Back to App
+						</a>
+						<a
+							href="/api/openapi.json"
+							target="_blank"
+							rel="noopener noreferrer"
+							className="inline-flex items-center justify-center rounded-md border border-input bg-background px-6 py-3 text-sm font-medium hover:bg-accent hover:text-accent-foreground transition-colors"
+						>
+							View API Spec
+						</a>
+					</div>
+
+					<div className="rounded-lg border bg-card p-8 space-y-4">
+						<h2 className="text-2xl font-semibold">Quick Start</h2>
+						<div className="rounded-md bg-muted p-4">
+							<pre className="text-sm overflow-x-auto">
+								<code>
+									{`# Install dependencies
+bun install
+
+# Start PostgreSQL
+bun run db:start
+bun run db:dev
+
+# Start all dev servers
+bun run dev
+
+# Visit http://localhost:3024`}
+								</code>
+							</pre>
+						</div>
+					</div>
+
+					<div className="grid gap-4 sm:grid-cols-2">
+						<div className="rounded-lg border bg-card p-6 space-y-2">
+							<h3 className="font-semibold">Type-Safe APIs</h3>
+							<p className="text-sm text-muted-foreground">
+								oRPC with auto-generated OpenAPI spec and type-safe clients
+							</p>
+						</div>
+						<div className="rounded-lg border bg-card p-6 space-y-2">
+							<h3 className="font-semibold">Full Auth Stack</h3>
+							<p className="text-sm text-muted-foreground">JWT, OTP, OIDC (Google/GitHub), and WebAuthn passkeys</p>
+						</div>
+						<div className="rounded-lg border bg-card p-6 space-y-2">
+							<h3 className="font-semibold">Audit Trail</h3>
+							<p className="text-sm text-muted-foreground">
+								Automatic change tracking with actor attribution for compliance
+							</p>
+						</div>
+						<div className="rounded-lg border bg-card p-6 space-y-2">
+							<h3 className="font-semibold">Real-time Updates</h3>
+							<p className="text-sm text-muted-foreground">LISTEN/NOTIFY for cross-instance awareness</p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+	);
+}
+
+export function App(): ReactElement {
 	return (
 		<BrowserRouter basename="/docs">
 			<Routes>
 				<Route index element={<Home />} />
-				<Route path="getting-started" element={<DocPage slug="getting-started" />} />
-				<Route path="monorepo" element={<DocPage slug="monorepo" />} />
-				<Route path="database" element={<DocPage slug="database" />} />
-				<Route path="api" element={<DocPage slug="api" />} />
-				<Route path="microfrontends" element={<DocPage slug="microfrontends" />} />
-				<Route path="ui-components" element={<DocPage slug="ui-components" />} />
-				<Route path="authentication" element={<DocPage slug="authentication" />} />
-				<Route path="error-handling" element={<DocPage slug="error-handling" />} />
-				<Route path="temporal" element={<DocPage slug="temporal" />} />
+				<Route path="getting-started" element={<MDXPage slug="getting-started" />} />
 				<Route
 					path="*"
 					element={
-						<DocsLayout>
-							<div className="py-12 text-center">
-								<h1 className="text-4xl font-bold mb-4">Page Not Found</h1>
-								<p className="text-muted-foreground mb-6">The documentation page you're looking for doesn't exist.</p>
-								<Link to="/" className="text-primary hover:underline">
-									Back to documentation
-								</Link>
+						<div className="flex min-h-screen items-center justify-center p-6 text-center">
+							<div className="space-y-4">
+								<h1 className="text-2xl font-bold">404 - Page Not Found</h1>
+								<a href="/docs" className="text-primary hover:underline">
+									Back to docs
+								</a>
 							</div>
-						</DocsLayout>
+						</div>
 					}
 				/>
 			</Routes>
