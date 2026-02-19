@@ -20,10 +20,7 @@ export function App() {
 			<Routes>
 				<Route element={<Layout />}>
 					<Route index element={<Home />} />
-					<Route
-						path="*"
-						element={<NotFound homeHref="/" homeLabel="Go home" />}
-					/>
+					<Route path="*" element={<NotFound homeHref="/" homeLabel="Go home" />} />
 				</Route>
 			</Routes>
 		</BrowserRouter>

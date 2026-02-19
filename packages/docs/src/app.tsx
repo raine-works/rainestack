@@ -1,14 +1,26 @@
 /**
  * Root application component for the docs micro-frontend.
  *
- * Simple docs app ready for customization.
+ * Simple empty docs page ready for customization.
  *
  * @module app
  */
 
 import { MDXPage } from '@docs/components/mdx-page';
+import { ThemePicker } from '@rainestack/ui/components/blocks/theme-picker';
 import type { ReactElement } from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router';
+
+function DocsLayout({ children }: { children: ReactElement }) {
+	return (
+		<div className="relative min-h-screen">
+			<header className="fixed top-0 right-0 z-50 flex items-center p-4">
+				<ThemePicker />
+			</header>
+			<main>{children}</main>
+		</div>
+	);
+}
 
 function Home(): ReactElement {
 	return (
@@ -22,7 +34,7 @@ function Home(): ReactElement {
 						</p>
 					</div>
 
-					<div className="flex gap-3">
+					<div className="flex gap-3 justify-center">
 						<a
 							href="/docs/getting-started"
 							className="inline-flex items-center justify-center rounded-md bg-primary px-6 py-3 text-sm font-medium text-primary-foreground hover:bg-primary/90 transition-colors"
@@ -98,19 +110,35 @@ export function App(): ReactElement {
 	return (
 		<BrowserRouter basename="/docs">
 			<Routes>
-				<Route index element={<Home />} />
-				<Route path="getting-started" element={<MDXPage slug="getting-started" />} />
+				<Route
+					index
+					element={
+						<DocsLayout>
+							<Home />
+						</DocsLayout>
+					}
+				/>
+				<Route
+					path="getting-started"
+					element={
+						<DocsLayout>
+							<MDXPage slug="getting-started" />
+						</DocsLayout>
+					}
+				/>
 				<Route
 					path="*"
 					element={
-						<div className="flex min-h-screen items-center justify-center p-6 text-center">
-							<div className="space-y-4">
-								<h1 className="text-2xl font-bold">404 - Page Not Found</h1>
-								<a href="/docs" className="text-primary hover:underline">
-									Back to docs
-								</a>
+						<DocsLayout>
+							<div className="flex min-h-screen items-center justify-center p-6 text-center">
+								<div className="space-y-4">
+									<h1 className="text-2xl font-bold">404 - Page Not Found</h1>
+									<a href="/docs" className="text-primary hover:underline">
+										Back to docs
+									</a>
+								</div>
 							</div>
-						</div>
+						</DocsLayout>
 					}
 				/>
 			</Routes>
